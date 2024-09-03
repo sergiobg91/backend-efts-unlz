@@ -1,0 +1,27 @@
+{
+  "name": "eftz_app",
+  "version": "1.0.0",
+  "description": "Repositorio de backend para proyecto EFTS APP - UNLZ",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergiobg91/backend-efts-unlz.git"
+  },
+  "author": "EFTS TEAM",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sergiobg91/backend-efts-unlz/issues"
+  },
+  "homepage": "https://github.com/sergiobg91/backend-efts-unlz#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.0"
+  }
+}
