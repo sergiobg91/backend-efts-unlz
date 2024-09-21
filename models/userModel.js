@@ -6,7 +6,9 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   email: String,
   password: String,
-  profilePicture: String
+  profilePicture: String,
+  passwordResetToken: String,  
+  passwordResetExpires: Date 
 });
 
 // Middleware para hashear la contrasenia antes de guardar el usuario
