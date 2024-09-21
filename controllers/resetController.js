@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import User from '../models/userModel.js'; 
+import User from '../models/userModel.js';
 import { sendPasswordResetEmail } from '../services/email.services.js';
 
 // Solicitud de reseteo de contraseña: solicitar token y enviar email
@@ -12,9 +12,9 @@ export const requestPasswordReset = async (req, res) => {
             return res.status(404).send('No existe un usuario registrado con este email');
         }
 
-        // Generar token de reseteo
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        user.passwordResetToken = resetToken;
+        // Genera un token de 6 caracteres numéricos
+        const resetToken = parseInt(crypto.randomBytes(3).toString('hex'), 16) % 1000000;
+        user.passwordResetToken = resetToken.toString().padStart(6, '0');;
         user.passwordResetExpires = Date.now() + 3600000; // 1hr
         await user.save();
 
@@ -36,7 +36,7 @@ export const resetPassword = async (req, res) => {
             passwordResetToken: token,
             passwordResetExpires: { $gt: Date.now() },
         });
-        
+
         console.log(user)
         if (!user) {
             return res.status(400).send('Token invalido o expirado');
