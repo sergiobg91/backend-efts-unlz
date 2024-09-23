@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
   password: String,
   profilePicture: String,
   passwordResetToken: String,  
-  passwordResetExpires: Date 
+  passwordResetExpires: Date ,
+  exercisesCompleted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Exercise' }]
 });
 
 // Middleware para hashear la contrasenia antes de guardar el usuario

@@ -10,14 +10,12 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
         },
     });
 
-    // const resetUrl = `eftsapp://eftsapp.com/reset-password?token=${resetToken}`;
-
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: 'Restablecimiento de contraseña',
-        text: `Has solicitado restablecer tu contraseña. El código solicitado es: ${resetToken}`,
-        html: `<p>Has solicitado restablecer tu contraseña. El código solicitado es: ${resetToken}</p>`,
+        subject: `Código ${resetToken}`,
+        text: `Has solicitado restablecer tu contraseña. El código es: ${resetToken}`,
+        html: `<p>Has solicitado restablecer tu contraseña. El código es: ${resetToken}</p>`,
     };
 
     try {
