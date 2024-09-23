@@ -4,7 +4,7 @@ const unitSchema = new mongoose.Schema({
   name: String,
   material: Boolean,
   excercise: Boolean,
-  //icon: integer -> Agregar número que indique qué unidad es (lo necesita el front)
+  icon: Number,
   moduleId: { type: mongoose.Schema.Types.ObjectId , ref: 'Module' } 
 })
 
