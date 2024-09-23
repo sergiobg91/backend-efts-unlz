@@ -6,6 +6,7 @@ import usersRoutes from '../routes/userRoutes.js'
 import moduleRoutes from '../routes/moduleRoutes.js'
 import unitRoutes from '../routes/unitRoutes.js'
 import resetRoutes from '../routes/resetRoutes.js';
+import materialRoutes from '../routes/materialRoutes.js';
 dotenv.config()
 
 const app = express()
@@ -27,6 +28,9 @@ app.use('/api/v1/modules', moduleRoutes)
 
 //Rutas UNITS
 app.use('/api/v1/modules', unitRoutes)
+
+//Rutas UNITS
+app.use('/api/v1/modules', materialRoutes)
 
 
 export default app

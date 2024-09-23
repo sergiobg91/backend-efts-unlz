@@ -1,4 +1,3 @@
-import Module from "../models/moduleModel.js";
 import Unit from "../models/unitModel.js";
 
 export const getUnits = async (req, res) => {
@@ -24,7 +23,7 @@ export const getUnit = async (req, res) => {
 
   try {
 
-    const unit = await Unit.findById(req.params.id)
+    const unit = await Unit.find({ icon: req.params.id });
 
     if (!unit)
       return res.status(404).json({message: "ID de unidad no encontrado para el modulo"})
