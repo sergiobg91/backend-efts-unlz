@@ -12,11 +12,11 @@ export const getMaterialsByUnit = async (req, res) => {
     const materials = await Material.find({ moduleId: id_module, unitId: parseInt(id_unit) });
 
     if (!materials.length) {
-      return res.status(404).json({ message: 'No materials found for this unit' });
+      return res.status(404).json({ message: 'No hay material disponible para esta unidad' });
     }
 
     return res.status(200).json(materials);
   } catch (error) {
-    return res.status(500).json({ message: 'Server error', error });
+    return res.status(500).json({ message: 'Error del servidor', error });
   }
 };

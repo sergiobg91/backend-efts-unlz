@@ -3,7 +3,6 @@ import Unit from "../models/unitModel.js";
 export const getUnits = async (req, res) => {
 
   try {
-
     const units = await Unit.find({ moduleId: req.params.id });
 
     if (!units)

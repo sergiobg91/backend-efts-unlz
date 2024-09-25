@@ -6,8 +6,8 @@ import usersRoutes from '../routes/userRoutes.js'
 import moduleRoutes from '../routes/moduleRoutes.js'
 import unitRoutes from '../routes/unitRoutes.js'
 import resetRoutes from '../routes/resetRoutes.js';
-import materialRoutes from '../routes/materialRoutes.js';
 import progressRoutes from '../routes/progressRoutes.js';
+import materialRoutes from '../routes/materialRoutes.js';
 dotenv.config()
 
 const app = express()
@@ -23,16 +23,14 @@ app.use('/api/v1/users/auth', authRoutes)
 app.use('/api/v1/users', usersRoutes)
 app.use('/api/v1/reset', resetRoutes);
 
-
 //Rutas MODULES
 app.use('/api/v1/modules', moduleRoutes)
 
 //Rutas UNITS
 app.use('/api/v1/units', unitRoutes)
 
-//Rutas PROGRESO
+//Rutas PROGRESS
 app.use('/api/v1/progress', progressRoutes);
-
 
 export default app
 
