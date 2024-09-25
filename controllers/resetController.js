@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+// import crypto from 'crypto';
 import User from '../models/userModel.js';
 import { sendPasswordResetEmail } from '../services/email.services.js';
 
@@ -13,9 +13,9 @@ export const requestPasswordReset = async (req, res) => {
         }
 
         // Genera un token de 6 caracteres numericos
-        const resetToken = parseInt(crypto.randomBytes(3).toString('hex'), 16) % 1000000;
-        user.passwordResetToken = resetToken.toString().padStart(6, '0');;
-        user.passwordResetExpires = Date.now() + 3600000; // 1hr
+        const resetToken = Math.floor(100000 + Math.random() * 900000);
+        user.passwordResetToken = resetToken.toString();
+        user.passwordResetExpires = Date.now() + 300000; // 5 minutes
         await user.save();
 
         // Enviar email
