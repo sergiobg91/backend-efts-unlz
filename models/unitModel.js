@@ -4,8 +4,8 @@ const unitSchema = new mongoose.Schema({
   name: String,
   material: Boolean,
   excercise: Boolean,
-  icon: Number,
-  moduleId: { type: mongoose.Schema.Types.ObjectId , ref: 'Module' } 
+  icon: Number, //sirve como id numerico para identificar la unidad tambien
+  moduleNumber: { type: Number , ref: 'Module' } 
 })
 
 export default mongoose.model('Unit', unitSchema);

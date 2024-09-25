@@ -3,10 +3,10 @@ import { requestPasswordReset, resetPassword } from '../controllers/resetControl
 
 const router = express.Router();
 
-// Solicitar reseteo de contrasena
+// Solicitar reseteo de contrasenia
 router.post('/request-reset-password', requestPasswordReset);
 
-// Resetear la contrasena
+// Resetear la contrasenia
 router.post('/reset-password', resetPassword);
 
 export default router;
