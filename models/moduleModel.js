@@ -1,10 +1,15 @@
 import  mongoose from 'mongoose';
 
 const moduleSchema = new mongoose.Schema({
-  id:  Number,
+  moduleNumber:  Number,
   name: String,
   description: String,
   units: Number
 })
 
-export default mongoose.model('Module', moduleSchema);
+//con este esquema resolvemos array de objetos para el frontend
+const mainModuleSchema = new mongoose.Schema({
+  modules: [moduleSchema]
+})
+
+export default mongoose.model('Module', mainModuleSchema);
