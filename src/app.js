@@ -27,7 +27,7 @@ app.use('/api/v1/reset', resetRoutes);
 app.use('/api/v1/modules', moduleRoutes)
 
 //Rutas UNITS
-app.use('/api/v1/units', unitRoutes)
+app.use('/api/v1/modules', unitRoutes)
 
 //Rutas PROGRESS
 app.use('/api/v1/progress', progressRoutes);
