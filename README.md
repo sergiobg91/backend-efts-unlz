@@ -48,7 +48,7 @@ Este repositorio contiene el backend de **EFTS Mobile**, una aplicación móvil 
 #### MODULES & UNITS
 + '/api/v1/modules'
 + '/api/v1/modules/{id}/units'
-+ '/api/v1/modules/units/{id}/levels'
++ '/api/v1/modules/{id}/units/{id}'
 
 #### EXCERCISES
 + '/api/v1/levels/{id}/exercises'
