@@ -29,6 +29,9 @@ app.use('/api/v1/modules', moduleRoutes)
 //Rutas UNITS
 app.use('/api/v1/modules', unitRoutes)
 
+//Rutas MATERIALS
+app.use('/api/v1/modules', materialRoutes)
+
 //Rutas PROGRESS
 app.use('/api/v1/progress', progressRoutes);
 

@@ -10,7 +10,7 @@ export const recordExerciseCompletion = async (req, res) => {
   const { userId, exerciseId } = req.body;
 
   try {
-     const objectIdExerciseId = new mongoose.Types.ObjectId(exerciseId);
+     const objectIdExerciseId = new mongoose.Schema.Types.ObjectId(exerciseId);
     let user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });

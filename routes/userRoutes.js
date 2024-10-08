@@ -1,13 +1,13 @@
-import Router from 'express';
-import  { getProfile, updateProfile } from '../controllers/userController.js';
-import { authenticateToken } from '../services/auth.services.js';
-import { recordExerciseCompletion } from '../services/progress.services.js';
+import Router from "express";
+import { getProfile, updateProfile } from "../controllers/userController.js";
+import { authenticateToken } from "../services/auth.services.js";
+import { recordExerciseCompletion } from "../controllers/progressController.js";
 
 const router = Router();
 
-router.get('/:id', authenticateToken, getProfile);
-router.put('/:id', authenticateToken, updateProfile);
+router.get("/:id", authenticateToken, getProfile);
+router.put("/:id", authenticateToken, updateProfile);
 
-router.post('/complete-exercise', recordExerciseCompletion);
+router.post("/complete-exercise", recordExerciseCompletion);
 
 export default router;

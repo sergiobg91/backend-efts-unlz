@@ -4,7 +4,7 @@ const moduleSchema = new mongoose.Schema({
   id: { type: Number, required: true },
   name: { type: String, required: true }, 
   description: { type: String, required: true },
-  units:{ type: Number, required: true }
+  units:{ type: Number, required: true } //total de unidades dentro del front
 })
 
 //con este esquema resolvemos array de objetos para el frontend
@@ -14,6 +14,8 @@ const mainModuleSchema = new mongoose.Schema({
 
 const MainModule = mongoose.model('mainModule', mainModuleSchema); 
 const Module = mongoose.model('Module', moduleSchema); 
+
+// export default mongoose.model('Module', mainModuleSchema);
 
 export default {
   MainModule,
