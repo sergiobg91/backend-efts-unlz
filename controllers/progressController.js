@@ -1,28 +1,56 @@
 import Exercise from '../models/exerciseModel.js';
 import User from '../models/userModel.js';
 import mongoose from 'mongoose';
-import Models from '../models/moduleModel.js';
+import Module from '../models/moduleModel.js';
 import Unit from '../models/unitModel.js';
+import Progress from '../models/progressModel.js';
 
-const { Module } = Models;
+// const { Module } = Models;
+
+// export const recordExerciseCompletion = async (req, res) => {
+//   const { userId, exerciseId } = req.body;
+
+//   try {
+//      const objectIdExerciseId = new mongoose.Schema.Types.ObjectId(exerciseId);
+//     let user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: 'Usuario no encontrado' });
+//     }
+
+//     //Buscar si el ejercicio ya fue agregado
+//      if (!user.exercisesCompleted.includes(objectIdExerciseId)) {
+//             user.exercisesCompleted.push(objectIdExerciseId);
+//     }else{
+//       return res.status(409).json({ message: 'Ejercicio ya hecho' });
+//     }
+//     await user.save();
+
+//     res.status(200).json({ message: 'Ejercicio registrado como completado' });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 export const recordExerciseCompletion = async (req, res) => {
   const { userId, exerciseId } = req.body;
 
   try {
-     const objectIdExerciseId = new mongoose.Schema.Types.ObjectId(exerciseId);
-    let user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    let progress = await Progress.findOne({ userId });
+    if (!progress) {
+      //Definir cómo manejar esto cuando recién se crea el usuario
+      return res.status(404).json({ message: 'Progreso no encontrado para el usuario' });
     }
 
-    //Buscar si el ejercicio ya fue agregado
-     if (!user.exercisesCompleted.includes(objectIdExerciseId)) {
-            user.exercisesCompleted.push(objectIdExerciseId);
-    }else{
-      return res.status(409).json({ message: 'Ejercicio ya hecho' });
-    }
-    await user.save();
+    progress.moduleProgress.forEach(module => {
+      module.unitProgress.forEach(unit => {
+        unit.exerciseProgress.forEach(ex => {
+          if (ex.exerciseId.toString() === exerciseId) {
+            ex.completed = true;
+          }
+        });
+      });
+    });
+    await progress.save();
 
     res.status(200).json({ message: 'Ejercicio registrado como completado' });
   } catch (error) {
@@ -68,7 +96,7 @@ export const getProgressForAllModules = async (req, res) => {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    const modules = await Module.find({}); 
+    const modules = await Module.find({});
     if (modules.length === 0) {
       return res.status(404).json({ message: 'No hay módulos disponibles' });
     }
@@ -76,42 +104,42 @@ export const getProgressForAllModules = async (req, res) => {
     var exercisesInModule = []
     for (const module of modules) {
       const unitsInModule = await Unit.find({ moduleId: module._id });
-      for (const unit of unitsInModule){
-        const exercises = await Exercise.find({ unitId: unit._id})
-        for(const exercise of exercises){
+      for (const unit of unitsInModule) {
+        const exercises = await Exercise.find({ unitId: unit._id })
+        for (const exercise of exercises) {
           exercisesInModule.push(exercise)
         }
       }
     }
 
     for (const module of modules) {
-    if (exercisesInModule.length > 0) {
-      //Trae los ejercicios completadosdel modulo
-      const completedExercisesInModule = user.exercisesCompleted.filter(ex => ex.moduleId.toString() === module._id.toString());
-      const progressPercentage = (completedExercisesInModule.length / exercisesInModule.length);
+      if (exercisesInModule.length > 0) {
+        //Trae los ejercicios completados del modulo
+        const completedExercisesInModule = user.exercisesCompleted.filter(ex => ex.moduleId.toString() === module._id.toString());
+        const progressPercentage = (completedExercisesInModule.length / exercisesInModule.length);
 
-      progressList.push({
-        moduleId: module._id,
-        moduleName: module.name,
-        moduleDescription: module.description,
-        moduleUnits: module.units,
-        progress: Math.round(progressPercentage * 100) / 100 //Redondeo
-      });
-    } else {
-      //Si no hay ejercicios en el modulo se asigna progreso 0%
-      progressList.push({
-        moduleId: module._id,
-        moduleName: module.name,
-        moduleDescription: module.description,
-        moduleUnits: module.units,
-        progress: 0
-      });
+        progressList.push({
+          moduleId: module._id,
+          moduleName: module.name,
+          moduleDescription: module.description,
+          moduleUnits: module.units,
+          progress: Math.round(progressPercentage * 100) / 100 //Redondeo
+        });
+      } else {
+        //Si no hay ejercicios en el modulo se asigna progreso 0%
+        progressList.push({
+          moduleId: module._id,
+          moduleName: module.name,
+          moduleDescription: module.description,
+          moduleUnits: module.units,
+          progress: 0
+        });
+      }
     }
-  }
-  var mainProgress = []
-  mainProgress.push({
-    data: progressList
-  })
+    var mainProgress = []
+    mainProgress.push({
+      data: progressList
+    })
     return res.status(200).json(mainProgress);
   } catch (error) {
     res.status(500).json({ error: error.message });
