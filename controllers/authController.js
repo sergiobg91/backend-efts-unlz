@@ -1,4 +1,5 @@
 import User from '../models/userModel.js';
+import { createInitialProgress } from '../controllers/progressController.js'
 import { generateToken } from '../services/auth.services.js'
 import { comparePassword } from '../services/password.services.js';
 
@@ -25,6 +26,12 @@ export const register = async (req, res) => {
       });
 
     await user.save();
+    
+    try {
+      await createInitialProgress(user._id, res);
+    }catch(error) {
+      console.log(error);
+    }
 
     const token = generateToken(user)
     return res.status(201).json({ token, userId: user._id });
