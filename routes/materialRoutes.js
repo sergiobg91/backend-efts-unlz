@@ -1,9 +1,10 @@
 import Router from 'express';
-import  { getMaterialsByUnit } from '../controllers/materialController.js';
+import  { getMaterialsByUnit, markMaterialAsRead } from '../controllers/materialController.js';
 
 const router = Router();
 
-// Ruta para obtener materiales por unidad dentro de un modulo
-router.get('/:id_module/units/:id_unit/materials', getMaterialsByUnit);
+// Ruta para obtener materiales por unidad dentro de una unidad
+router.get('/', getMaterialsByUnit);
+router.post('/read', markMaterialAsRead);
 
 export default router;

@@ -1,9 +1,8 @@
 import Router from 'express';
-import  { getUnits, getUnit } from '../controllers/unitController.js';
+import  { getUnits } from '../controllers/unitController.js';
 
 const router = Router();
 
-router.get('/:id/units', getUnits);
-router.get('/:id/units/:id', getUnit);
+router.get('/', getUnits);
 
 export default router;

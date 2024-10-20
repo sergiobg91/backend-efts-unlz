@@ -8,6 +8,7 @@ import unitRoutes from '../routes/unitRoutes.js'
 import resetRoutes from '../routes/resetRoutes.js';
 import progressRoutes from '../routes/progressRoutes.js';
 import materialRoutes from '../routes/materialRoutes.js';
+import exerciseRoutes from '../routes/exerciseRoutes.js'
 dotenv.config()
 
 const app = express()
@@ -27,10 +28,13 @@ app.use('/api/v1/reset', resetRoutes);
 app.use('/api/v1/modules', moduleRoutes)
 
 //Rutas UNITS
-app.use('/api/v1/modules', unitRoutes)
+app.use('/api/v1/units', unitRoutes)
 
 //Rutas MATERIALS
-app.use('/api/v1/modules', materialRoutes)
+app.use('/api/v1/materials', materialRoutes)
+
+//Rutas EXCERCISES
+app.use('/api/v1/exercises', exerciseRoutes)
 
 //Rutas PROGRESS
 app.use('/api/v1/progress', progressRoutes);

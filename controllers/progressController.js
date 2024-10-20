@@ -1,6 +1,5 @@
 import Exercise from '../models/exerciseModel.js';
 import Material from '../models/materialModel.js';
-import User from '../models/userModel.js';
 import Module from '../models/moduleModel.js';
 import Unit from '../models/unitModel.js';
 import Progress from '../models/progressModel.js';
@@ -156,6 +155,7 @@ export const recordExerciseCompletion = async (req, res) => {
 
 /////////////////////-----------------------------//////////////////////////////////
 export const createInitialProgress = async (userId, res) => {
+
   try {
     const modules = await Module.find();
     const moduleProgress = await Promise.all(modules.map(async (module) => {
@@ -221,9 +221,13 @@ export const updateDeltaProgressByUser = async (req, res) => {
     const { userId } = req.params;
     const progress = await Progress.findOne({ userId });
 
-    //no deberia salir por aca
+    //si no existe, lo creamos
     if (!progress) {
-      return res.status(404).json({ message: "No hay progreso para el usuario" });
+      try {
+        await createInitialProgress(userId, res);
+      }catch(error) {
+        console.log("Error al crear progreso desde updateDelta: ", error);
+      }
     }
 
     // Obtener todos los modulos, unidades, materiales y ejercicios actuales de la base

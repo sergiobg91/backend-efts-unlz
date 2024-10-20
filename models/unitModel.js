@@ -5,7 +5,6 @@ const unitSchema = new mongoose.Schema({
   material: Boolean,
   excercise: Boolean,
   icon: Number, //sirve como id numerico para identificar la unidad tambien
-  // moduleNumber: { type: Number , ref: 'Module' },
   moduleId: {type: mongoose.Schema.Types.ObjectId, ref: 'Module'}
 })
 
