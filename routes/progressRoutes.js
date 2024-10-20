@@ -8,7 +8,7 @@ const router = Router();
 router.post("/complete-exercise", recordExerciseCompletion);
 
 // router.get('/progress/details/:userId', authenticateToken, getProgressWithDetails);
-router.get('/details/:userId', authenticateToken, getProgressWithDetails);
+router.get('/details/:userId', getProgressWithDetails);
 router.patch('/delta-update/:userId', updateDeltaProgressByUser);
 
 export default router;
