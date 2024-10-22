@@ -1,5 +1,6 @@
 import Material from "../models/materialModel.js";
 import Progress from '../models/progressModel.js';
+import { updateModuleProgressPercentage } from './progressController.js'
 
 // Obtener los materiales de una unidad especifica
 export const getMaterialsByUnit = async (req, res) => {
@@ -10,13 +11,13 @@ export const getMaterialsByUnit = async (req, res) => {
     const materials = await Material.find(materialId ? { moduleId, unitId, _id: materialId } : { moduleId, unitId });
 
     if (!materials.length) {
-      return res.status(404).json({ message: 'No se encontro material para la unidad seleccionada' });
+      return res.status(404).json({ getExerciseByUnit: 'No se encontro material para la unidad seleccionada' });
     }
 
     return res.status(200).json(materials);
 
   } catch (error) {
-    return res.status(500).json({ message: 'Error en servidor: ', error });
+    return res.status(500).json({ getExerciseByUnit: error.message });
   }
 };
 
@@ -27,14 +28,14 @@ export const markMaterialAsRead = async (req, res) => {
 
     
     if (!userId || !moduleId || !unitId || !materialId) {
-      return res.status(400).json({ message: "Parametros requeridos incompletos" });
+      return res.status(400).json({ markMaterialAsRead: "Parametros requeridos incompletos" });
     }
 
     // Buscar el progreso del usuario en el modulo y unidad especificada
     const progress = await Progress.findOne({ userId, "moduleProgress.moduleId": moduleId });
 
     if (!progress) {
-      return res.status(404).json({ message: "Progress not found for this user and module" });
+      return res.status(404).json({ errorMarkMaterialAsRead: "Progreso no existe para el usuario y modulo" });
     }
 
     // Buscar la unidad dentro del modulo
@@ -42,25 +43,24 @@ export const markMaterialAsRead = async (req, res) => {
     const unitProgress = moduleProgress.unitProgress.find(up => up.unitId.toString() === unitId);
 
     if (!unitProgress) {
-      return res.status(404).json({ message: "Unit progress not found" });
+      return res.status(404).json({ markMaterialAsRead: "Progreso de unidad no encontrado" });
     }
 
-    // Buscar el material dentro de la unidad y marcarlo como leido
     const materialProgress = unitProgress.materialProgress.find(mp => mp.materialId.toString() === materialId);
 
     if (!materialProgress) {
-      return res.status(404).json({ message: "Material not found in progress" });
+      return res.status(404).json({ markMaterialAsRead: "Progreso de material no encontrado" });
     }
 
-    // Marcar el material como leido
     materialProgress.read = true;
-
-    // Guardar el progreso actualizado
     await progress.save();
 
-    return res.status(200).json({ message: "Material marcado como leido", progress });
+    //actualiza progreso cada vez que completa material
+    await updateModuleProgressPercentage(userId, moduleId);
+
+    return res.status(200).json({ message: "Material marcado como leido"});
   } catch (error) {
     console.error("Error al marcar material como leido:", error);
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ errorMarkMaterialAsRead: error });
   }
 };

@@ -190,7 +190,7 @@ export const createInitialProgress = async (userId, res) => {
     await newProgress.save();
     return newProgress;
   } catch (error) {
-    return  res.status(500).json({ error: error.message });
+    return  res.status(500).json({  errorCreateInitialProgress: error.message });
   }
 };
 
@@ -206,11 +206,11 @@ export const getProgressWithDetails = async (req, res) => {
       // .populate('moduleProgress.unitProgress.exerciseProgress.exerciseId');
 
     if (!progress)
-      return res.status(500).json({ message: "Error de consistencia en la base, el progreso debe existir" });
+      return res.status(500).json({ mensaje: "Error de consistencia en la base, el progreso debe existir" });
 
     return res.status(200).json(progress);
   } catch (error) {
-      return res.status(500).json({ mensaje: error.message});
+      return res.status(500).json({ errorGetProgressWithDetails : error.message});
   }
 };
 
@@ -304,6 +304,50 @@ export const updateDeltaProgressByUser = async (req, res) => {
     await progress.save();
     return res.status(200).json({ mensaje: "Progreso del usuario actualizado", progress });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ errorUpdateDeltaProgressByUser: error.message });
+  }
+};
+
+export const updateModuleProgressPercentage = async (userId, moduleId) => {
+  try {
+
+    const progress = await Progress.findOne({ userId, "moduleProgress.moduleId": moduleId });
+
+    if (!progress)
+      return res.status(404).json({ updateModuleProgressPercentage: 'Progreso no encontrado para el usuario' });
+
+    //Obtener la info del modulo
+    const moduleProgress = progress.moduleProgress.find(mp => mp.moduleId.toString() === moduleId);
+
+    if (!moduleProgress)
+      return res.status(404).json({ updateModuleProgressPercentage: 'Modulo no encontrado dentro del progreso del usuario' });
+
+    // Variables para el total de elementos y los completados
+    let totalElementos = 0;
+    let elementosCompletados = 0;
+
+    moduleProgress.unitProgress.forEach(unit => {
+      
+      totalElementos += unit.materialProgress.length;
+      elementosCompletados += unit.materialProgress.filter(mp => mp.read).length;
+
+      totalElementos += unit.exerciseProgress.length;
+      elementosCompletados += unit.exerciseProgress.filter(ep => ep.completed).length;
+
+    //Si todos los materiales y ejercicios estan en true, cambiamos la unidad a completada
+     const allMaterialsCompleted = unit.materialProgress.every(mp => mp.read === true);
+     const allExercisesCompleted = unit.exerciseProgress.every(ep => ep.completed === true);
+    
+    (allMaterialsCompleted && allExercisesCompleted) ? unit.unitCompleted = true : unit.unitCompleted = false;
+    });
+
+    // Evitar division por cero si no hay elementos y calcula en flotante entre 0 y 1
+    totalElementos != 0 ? moduleProgress.moduleProgressPercentage = (elementosCompletados / totalElementos) : moduleProgress.moduleProgressPercentage = 0;
+    moduleProgress.moduleProgressPercentage === 1 ? moduleProgress.moduleCompleted = true : moduleProgress.moduleCompleted = false;
+    await progress.save();
+
+    return { message: "Progreso del modulo actualizado correctamente", progress };
+  } catch (error) {
+    return res.status(500).json({ updateModuleProgressPercentage: error.message });
   }
 };
