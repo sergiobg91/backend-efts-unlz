@@ -55,8 +55,8 @@ export const markExerciseAsComplete = async (req, res) => {
     exerciseProgress.completed = true;
     await progress.save();
 
-    //actualiza progreso cada vez que completa material
-    await updateModuleProgressPercentage(userId, moduleId);
+    //actualiza progreso cada vez que completa ejercicios
+    await updateModuleProgressPercentage(userId, moduleId, res);
 
     return res.status(200).json({ message: "Ejercicio marcado como completado"});
   } catch (error) {

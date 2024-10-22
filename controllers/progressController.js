@@ -235,6 +235,8 @@ export const updateDeltaProgressByUser = async (req, res) => {
     
     for (let module of modules) {
       let moduleProgress = progress.moduleProgress.find(mp => mp.moduleId.toString() === module._id.toString());
+
+      await updateModuleProgressPercentage(userId, module._id.toString(), res)
       
       if (!moduleProgress) {
         console.log("en if delta modulo");
@@ -301,6 +303,7 @@ export const updateDeltaProgressByUser = async (req, res) => {
         }
       }
     }
+
     await progress.save();
     return res.status(200).json({ mensaje: "Progreso del usuario actualizado", progress });
   } catch (error) {
@@ -308,7 +311,7 @@ export const updateDeltaProgressByUser = async (req, res) => {
   }
 };
 
-export const updateModuleProgressPercentage = async (userId, moduleId) => {
+export const updateModuleProgressPercentage = async (userId, moduleId, res) => {
   try {
 
     const progress = await Progress.findOne({ userId, "moduleProgress.moduleId": moduleId });
@@ -348,6 +351,6 @@ export const updateModuleProgressPercentage = async (userId, moduleId) => {
 
     return { message: "Progreso del modulo actualizado correctamente", progress };
   } catch (error) {
-    return res.status(500).json({ updateModuleProgressPercentage: error.message });
+      return res.status(500).json({ updateModuleProgressPercentage: error.message });
   }
 };

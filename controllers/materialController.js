@@ -55,8 +55,8 @@ export const markMaterialAsRead = async (req, res) => {
     materialProgress.read = true;
     await progress.save();
 
-    //actualiza progreso cada vez que completa material
-    await updateModuleProgressPercentage(userId, moduleId);
+    //actualiza progreso cada vez que completa material.
+    await updateModuleProgressPercentage(userId, moduleId, res);
 
     return res.status(200).json({ message: "Material marcado como leido"});
   } catch (error) {
