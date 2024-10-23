@@ -190,7 +190,7 @@ export const createInitialProgress = async (userId, res) => {
     await newProgress.save();
     return newProgress;
   } catch (error) {
-    return  res.status(500).json({  errorCreateInitialProgress: error.message });
+      return  res.status(500).json({  errorCreateInitialProgress: error.message });
   }
 };
 
@@ -225,18 +225,23 @@ export const updateDeltaProgressByUser = async (req, res) => {
     if (!progress) {
       try {
         await createInitialProgress(userId, res);
+        console.log("debug 1  await createInitialProgress");
+        return res.json({ messsage: "Progreso creado desde createInitialProgress" })
       }catch(error) {
         console.log("Error al crear progreso desde updateDelta: ", error);
       }
     }
-
+    console.log("debug 2 after createInitialProgress");
     // Obtener todos los modulos, unidades, materiales y ejercicios actuales de la base
     const modules = await Module.find();
+    console.log("leyendo progress 1: ", progress);
     
     for (let module of modules) {
       let moduleProgress = progress.moduleProgress.find(mp => mp.moduleId.toString() === module._id.toString());
+      console.log("debug 3 after let moduleProgress.find");
 
       await updateModuleProgressPercentage(userId, module._id.toString(), res)
+      console.log("debug 4 after updateModuleProgressPercentage");
       
       if (!moduleProgress) {
         console.log("en if delta modulo");
@@ -261,6 +266,8 @@ export const updateDeltaProgressByUser = async (req, res) => {
           moduleCompleted: false,
           moduleProgressPercentage: 0
         });
+        console.log("debug 5 after moduleProgress.push");
+
       } else {
         console.log("en else de unidades");
         //modulo existe, pero verificamos unidades nuevas
@@ -268,6 +275,8 @@ export const updateDeltaProgressByUser = async (req, res) => {
 
         for (let unit of units) {
           let unitProgress = moduleProgress.unitProgress.find(up => up.unitId.toString() === unit._id.toString());
+          console.log("debug 6 after moduleProgress.push");
+          console.debug("debug 6 after moduleProgress.push");
           console.log("en for de unidades dentro de un modulo: ", unit);
           if (!unitProgress) {
             console.log("en if delta unidad");
@@ -281,6 +290,7 @@ export const updateDeltaProgressByUser = async (req, res) => {
               exerciseProgress: exercises.map(exercise => ({ exerciseId: exercise._id, completed: false })),
               unitCompleted: false
             });
+            console.log("debug 7 after moduleProgress.unitProgress.push");
           } else {
             //Unidad existe, pero verificamos nuevos materiales o ejercicios
             const materials = await Material.find({ unitId: unit._id });
@@ -303,11 +313,12 @@ export const updateDeltaProgressByUser = async (req, res) => {
         }
       }
     }
-
+    console.log("debug 8 before save");
     await progress.save();
     return res.status(200).json({ mensaje: "Progreso del usuario actualizado", progress });
   } catch (error) {
-    return res.status(500).json({ errorUpdateDeltaProgressByUser: error.message });
+      console.error("debug error");
+      return res.status(500).json({ errorUpdateDeltaProgressByUser: error.message });
   }
 };
 
