@@ -2,8 +2,10 @@ import User from "../models/userModel.js";
 
 export const getProfile = async (req, res) => {
 
+  const { id } = req.params;
+
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(id).select('-password');
     return res.status(200).json(user);
 
   } catch (error) {
@@ -13,10 +15,11 @@ export const getProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
 
-  const { name, email, profilePicture } = req.body;
+  const { name, lastName, role, licence } = req.body;
+  const { id } = req.params;
 
   try {
-    const user = await User.findByIdAndUpdate( req.user.id, { name, email, profilePicture }, { new: true }).select('-password');
+    const user = await User.findByIdAndUpdate( id, { name, lastName, role, licence }, { new: true }).select('-password');
     return res.status(200).json(user);
 
   } catch (error) {

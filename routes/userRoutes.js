@@ -5,8 +5,8 @@ import { recordExerciseCompletion } from "../controllers/progressController.js";
 
 const router = Router();
 
-router.get("/:id", authenticateToken, getProfile);
-router.put("/:id", authenticateToken, updateProfile);
+router.get("/:id", getProfile);
+router.put("/:id", updateProfile);
 
 router.post("/complete-exercise", recordExerciseCompletion);
 
